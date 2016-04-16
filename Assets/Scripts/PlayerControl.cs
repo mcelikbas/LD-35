@@ -7,13 +7,11 @@ public class PlayerControl : MonoBehaviour
     private Animator animator;
 
     public bool lockMovement = false;
-    private float speedBurst = 30.0f;
-    private float speedDecayLimit = 15.0f;
-    public float speed;
+    private float speed = 15.0f;
 
-    private float jumpSpeed = 15.0f;
+    private float jumpSpeed = 10.0f;
     public bool grounded = false;
-    private float poundSpeed = 20.0f;
+    private float poundSpeed = 15.0f;
     public bool canPound = false;
 
 
@@ -26,19 +24,7 @@ public class PlayerControl : MonoBehaviour
 
     void Update ()
     {
-        // MOVEMENT
-        float horInput = Input.GetAxis("Horizontal");
-        if (!lockMovement)
-        {
-            if (horInput != 0.0f)
-            {
-                Move(horInput);
-            }
-            else
-            {
-                ResetSpeed();
-            }
-        }
+        print(rb.velocity.x);
 
         // JUMPING && POUNDING
         if (Input.GetButtonDown("Jump"))
@@ -71,14 +57,25 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void Move (float dir)
+
+    void FixedUpdate ()
     {
-        // we want a small acceleration at begining of movement, then speed is decaying
-        transform.Translate(dir * speed * Time.deltaTime, 0, 0);
-        if (speed > speedDecayLimit)
-            speed -= speed * Time.deltaTime;
-        if (grounded)
-            ShapeshiftInCircle();
+        // MOVEMENT
+        float horInput = Input.GetAxisRaw("Horizontal");
+        if (!lockMovement)
+        {
+            if (horInput != 0.0f)
+            {
+                rb.velocity = new Vector3(horInput * speed, rb.velocity.y, 0);
+                if (grounded)
+                    ShapeshiftInCircle();
+            }
+            else
+            {
+                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+                ShapeshiftInSquare();
+            }
+        }
     }
 
     void Jump ()
@@ -93,6 +90,7 @@ public class PlayerControl : MonoBehaviour
     {
         ShapeshiftInSquare();
         lockMovement = true;
+        rb.velocity = new Vector3(0, rb.velocity.y, 0);
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
     }
@@ -118,17 +116,10 @@ public class PlayerControl : MonoBehaviour
         animator.SetBool("Triangle", false);
     }
 
-    void ResetSpeed ()
-    {
-        speed = speedBurst;
-        if (grounded)
-            ShapeshiftInSquare();
-    }
-
 
     void OnCollisionStay2D (Collision2D col)
     {
-        if (col.gameObject.tag == "Ground")
+        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Obstacle"))
         {
             grounded = true;
             canPound = false;
