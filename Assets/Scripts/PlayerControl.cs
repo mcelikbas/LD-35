@@ -4,20 +4,23 @@ using System.Collections;
 public class PlayerControl : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator animator;
 
     public bool lockMovement = false;
     private float speedBurst = 30.0f;
     private float speedDecayLimit = 15.0f;
     public float speed;
 
-    private float jumpSpeed = 10.0f;
+    private float jumpSpeed = 15.0f;
     public bool grounded = false;
-    private float poundSpeed = 10.0f;
+    private float poundSpeed = 20.0f;
     public bool canPound = false;
+
 
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
+        animator = gameObject.GetComponent<Animator>();
     }
 
 
@@ -53,6 +56,19 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
+        // SHAPESHIFTING
+        if (Input.GetButtonDown("Triangle"))
+        {
+            ShapeshiftInTriangle();
+        }
+        else if (Input.GetButtonDown("Square"))
+        {
+            ShapeshiftInSquare();
+        }
+        else if (Input.GetButtonDown("Circle"))
+        {
+            ShapeshiftInCircle();
+        }
     }
 
     void Move (float dir)
@@ -61,6 +77,8 @@ public class PlayerControl : MonoBehaviour
         transform.Translate(dir * speed * Time.deltaTime, 0, 0);
         if (speed > speedDecayLimit)
             speed -= speed * Time.deltaTime;
+        if (grounded)
+            ShapeshiftInCircle();
     }
 
     void Jump ()
@@ -68,19 +86,43 @@ public class PlayerControl : MonoBehaviour
         rb.AddForce(Vector3.up * jumpSpeed, ForceMode2D.Impulse);
         grounded = false;
         canPound = true;
+        ShapeshiftInTriangle();
     }
 
     void Pound ()
     {
+        ShapeshiftInSquare();
         lockMovement = true;
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
     }
 
+    void ShapeshiftInTriangle ()
+    {
+        animator.SetBool("Triangle", true);
+        animator.SetBool("Square", false);
+        animator.SetBool("Circle", false);
+    }
+
+    void ShapeshiftInSquare ()
+    {
+        animator.SetBool("Square", true);
+        animator.SetBool("Triangle", false);
+        animator.SetBool("Circle", false);
+    }
+
+    void ShapeshiftInCircle ()
+    {
+        animator.SetBool("Circle", true);
+        animator.SetBool("Square", false);
+        animator.SetBool("Triangle", false);
+    }
 
     void ResetSpeed ()
     {
         speed = speedBurst;
+        if (grounded)
+            ShapeshiftInSquare();
     }
 
 
