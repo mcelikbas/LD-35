@@ -83,7 +83,6 @@ public class PlayerControl : MonoBehaviour
         StopMovement();
         isPounding = true;
         ShapeshiftInSquare();
-        cam.GetComponent<CameraControl>().isShaking = true;
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
     }
@@ -112,15 +111,21 @@ public class PlayerControl : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground") && isPounding)
+        if (col.gameObject.CompareTag("MovingPlatform"))
         {
-            audioSource.PlayOneShot(poundSnd, 0.7F);
+            transform.parent = col.transform;
+        }
+
+        if (col.collider.gameObject.layer == LayerMask.NameToLayer("Ground") && isPounding)
+        {
+            audioSource.PlayOneShot(poundSnd, 0.5F);
+            cam.GetComponent<CameraControl>().isShaking = true;
         }
     }
 
     void OnCollisionStay2D (Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground"))
+        if (col.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             grounded = true;
             canPound = false;
@@ -128,11 +133,16 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void OnCollisionExit2D (Collision2D coll)
+    void OnCollisionExit2D (Collision2D col)
     {
         grounded = false;
         canPound = true;
         ShapeshiftInTriangle();
+
+        if (col.gameObject.CompareTag("MovingPlatform"))
+        {
+            transform.parent = null;
+        }
     }
 
     void StopMovement ()

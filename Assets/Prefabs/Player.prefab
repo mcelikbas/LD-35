@@ -169,9 +169,8 @@ MonoBehaviour:
   lockMovement: 0
   grounded: 0
   canPound: 0
+  isPounding: 0
   poundSnd: {fileID: 8300000, guid: 942afc246ce2659459115e494fec6341, type: 3}
-  pState: 0
-  lastState: 0
 --- !u!212 &21284344
 SpriteRenderer:
   m_ObjectHideFlags: 1

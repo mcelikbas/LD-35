@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PoundDestroy : MonoBehaviour {
+public class DestroyablePlatform : MonoBehaviour {
 
     PlayerControl player;
 
