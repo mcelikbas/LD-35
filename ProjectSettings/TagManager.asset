@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - MovingPlatform
+  - Checkpoint
+  - DeathGround
+  - Ground
   layers:
   - Default
   - TransparentFX
