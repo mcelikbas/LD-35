@@ -8,6 +8,7 @@ TagManager:
   - Checkpoint
   - DeathGround
   - Ground
+  - LevelEnd
   layers:
   - Default
   - TransparentFX

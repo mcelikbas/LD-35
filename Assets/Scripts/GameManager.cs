@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour {
     private PlayerControl player;
     public GameObject checkpoint;
 
+    public static int level = 1;
+    private int lastLevel = 4;
 
     void Start ()
     {
@@ -18,10 +20,23 @@ public class GameManager : MonoBehaviour {
 
 	void Update () 
 	{
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+        if (Input.GetKeyDown(KeyCode.R))
             RespawnPlayer();
 	}
 
+
+    public void NextLevel()
+    {
+        level++;
+        if (level < lastLevel + 1)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(level);
+        }
+        else
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
+    }
 
     void SpawnPlayer ()
     {
