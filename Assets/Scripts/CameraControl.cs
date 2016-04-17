@@ -11,7 +11,6 @@ public class CameraControl : MonoBehaviour {
     private float mTime = 0.0f;
     public bool isShaking = false;
 
-
     void Update () 
 	{
         ShakeCamera();

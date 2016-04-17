@@ -14,25 +14,17 @@ public class PlayerControl : MonoBehaviour
     public bool lockMovement = false;
     public bool grounded = false;
     public bool canPound = false;
+    public bool isPounding = false;
 
-    public enum playerState
-    {
-        IDLE,
-        RUNNING,
-        INAIR,
-        POUNDING
-    };
-    public playerState pState;
-    public playerState lastState;
+    private AudioSource audioSource;
+    public AudioClip poundSnd;
 
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
         cam = Camera.main;
-
-        pState = playerState.IDLE;
-        lastState = playerState.IDLE;
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     void Update ()
@@ -52,8 +44,6 @@ public class PlayerControl : MonoBehaviour
                 }
             }
         }
-
-        CheckState();
     }
 
     void FixedUpdate ()
@@ -66,38 +56,16 @@ public class PlayerControl : MonoBehaviour
             {
                 rb.velocity = new Vector3(horInput * speed, rb.velocity.y, 0);
                 if (grounded)
-                    ChangeState(playerState.RUNNING);
+                    ShapeshiftInCircle();
             }
             else
             {
                 if (grounded)
                 {
                     StopMovement();
-                    ChangeState(playerState.IDLE);
+                    ShapeshiftInSquare();
                 }
             }
-        }
-    }
-
-    void ChangeState (playerState newState)
-    {
-        lastState = pState;
-        pState = newState;
-    }
-
-    void CheckState ()
-    {
-        if (pState == playerState.IDLE || pState == playerState.POUNDING)
-        {
-            ShapeshiftInSquare();
-        }
-        else if (pState == playerState.RUNNING)
-        {
-            ShapeshiftInCircle();
-        }
-        else if (pState == playerState.INAIR)
-        {
-            ShapeshiftInTriangle();
         }
     }
     
@@ -105,7 +73,7 @@ public class PlayerControl : MonoBehaviour
     {
         grounded = false;
         canPound = true;
-        ChangeState(playerState.INAIR);
+        ShapeshiftInTriangle();
         rb.AddForce(Vector3.up * jumpSpeed, ForceMode2D.Impulse);
     }
 
@@ -113,7 +81,8 @@ public class PlayerControl : MonoBehaviour
     {
         lockMovement = true;
         StopMovement();
-        ChangeState(playerState.POUNDING);
+        isPounding = true;
+        ShapeshiftInSquare();
         cam.GetComponent<CameraControl>().isShaking = true;
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
@@ -141,12 +110,21 @@ public class PlayerControl : MonoBehaviour
     }
 
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Ground") && isPounding)
+        {
+            audioSource.PlayOneShot(poundSnd, 0.7F);
+        }
+    }
+
     void OnCollisionStay2D (Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Obstacle"))
+        if (col.gameObject.CompareTag("Ground"))
         {
             grounded = true;
             canPound = false;
+            isPounding = false;
         }
     }
 
@@ -154,7 +132,7 @@ public class PlayerControl : MonoBehaviour
     {
         grounded = false;
         canPound = true;
-        ChangeState(playerState.INAIR);
+        ShapeshiftInTriangle();
     }
 
     void StopMovement ()

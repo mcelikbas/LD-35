@@ -12,7 +12,7 @@ public class PoundDestroy : MonoBehaviour {
 
     void OnCollisionEnter2D (Collision2D col)
     {
-        if (player.pState == PlayerControl.playerState.POUNDING)
+        if (player.isPounding)
         {
             Destroy(gameObject);
         }
