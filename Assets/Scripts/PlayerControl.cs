@@ -5,6 +5,7 @@ public class PlayerControl : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator animator;
+    Camera cam;
 
     private float speed = 15.0f;
     private float jumpSpeed = 12.0f;
@@ -28,6 +29,7 @@ public class PlayerControl : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
+        cam = Camera.main;
 
         pState = playerState.IDLE;
         lastState = playerState.IDLE;
@@ -112,6 +114,7 @@ public class PlayerControl : MonoBehaviour
         lockMovement = true;
         StopMovement();
         ChangeState(playerState.POUNDING);
+        cam.GetComponent<CameraControl>().isShaking = true;
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
     }
