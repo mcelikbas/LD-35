@@ -17,7 +17,7 @@ public class DeathGround : MonoBehaviour {
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            audioSource.PlayOneShot(death, 0.5f);
+            audioSource.PlayOneShot(death, 0.2f);
             gm.RespawnPlayer();
         }
     }

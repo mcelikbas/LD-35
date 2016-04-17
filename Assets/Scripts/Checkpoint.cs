@@ -9,7 +9,6 @@ public class Checkpoint : MonoBehaviour {
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            print("sth");
             gm.checkpoint = transform.gameObject;
         }
     }

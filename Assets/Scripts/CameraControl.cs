@@ -14,6 +14,14 @@ public class CameraControl : MonoBehaviour {
     void Update () 
 	{
         ShakeCamera();
+
+
+        Vector3 newPos = target.transform.position;
+        Camera camera = GetComponent<Camera>();
+
+        Vector3 roundPos = new Vector3(RoundToNearestPixel(newPos.x, camera), RoundToNearestPixel(newPos.y, camera), camera.transform.position.z);
+        transform.position = roundPos;
+
     }
 
     void LateUpdate ()
@@ -43,5 +51,15 @@ public class CameraControl : MonoBehaviour {
             isShaking = false;
             mTime = 0.0f;
         }
+    }
+
+
+
+    float RoundToNearestPixel (float unityUnits, Camera viewingCamera)
+    {
+        float valueInPixels = (Screen.height / (viewingCamera.orthographicSize * 2)) * unityUnits;
+        valueInPixels = Mathf.Round(valueInPixels);
+        float adjustedUnityUnits = valueInPixels / (Screen.height / (viewingCamera.orthographicSize * 2));
+        return adjustedUnityUnits;
     }
 }

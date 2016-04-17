@@ -54,6 +54,7 @@ public class PlayerControl : MonoBehaviour
         {
             if (horInput != 0.0f)
             {
+                transform.localScale = new Vector3(horInput, 1, 1);
                 rb.velocity = new Vector3(horInput * speed, rb.velocity.y, 0);
                 if (grounded)
                     ShapeshiftInCircle();
@@ -118,7 +119,7 @@ public class PlayerControl : MonoBehaviour
 
         if (col.collider.gameObject.layer == LayerMask.NameToLayer("Ground") && isPounding)
         {
-            audioSource.PlayOneShot(poundSnd, 0.5F);
+            audioSource.PlayOneShot(poundSnd, 0.3F);
             cam.GetComponent<CameraControl>().isShaking = true;
         }
     }
