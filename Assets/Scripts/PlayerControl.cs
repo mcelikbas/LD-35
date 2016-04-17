@@ -6,26 +6,35 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
 
-    public bool lockMovement = false;
     private float speed = 15.0f;
+    private float jumpSpeed = 12.0f;
+    private float poundSpeed = 20.0f;
 
-    private float jumpSpeed = 10.0f;
+    public bool lockMovement = false;
     public bool grounded = false;
-    private float poundSpeed = 15.0f;
     public bool canPound = false;
 
+    public enum playerState
+    {
+        IDLE,
+        RUNNING,
+        INAIR,
+        POUNDING
+    };
+    public playerState pState;
+    public playerState lastState;
 
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
-    }
 
+        pState = playerState.IDLE;
+        lastState = playerState.IDLE;
+    }
 
     void Update ()
     {
-        print(rb.velocity.x);
-
         // JUMPING && POUNDING
         if (Input.GetButtonDown("Jump"))
         {
@@ -42,21 +51,8 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        // SHAPESHIFTING
-        if (Input.GetButtonDown("Triangle"))
-        {
-            ShapeshiftInTriangle();
-        }
-        else if (Input.GetButtonDown("Square"))
-        {
-            ShapeshiftInSquare();
-        }
-        else if (Input.GetButtonDown("Circle"))
-        {
-            ShapeshiftInCircle();
-        }
+        CheckState();
     }
-
 
     void FixedUpdate ()
     {
@@ -68,29 +64,54 @@ public class PlayerControl : MonoBehaviour
             {
                 rb.velocity = new Vector3(horInput * speed, rb.velocity.y, 0);
                 if (grounded)
-                    ShapeshiftInCircle();
+                    ChangeState(playerState.RUNNING);
             }
             else
             {
-                rb.velocity = new Vector3(0, rb.velocity.y, 0);
-                ShapeshiftInSquare();
+                if (grounded)
+                {
+                    StopMovement();
+                    ChangeState(playerState.IDLE);
+                }
             }
         }
     }
 
+    void ChangeState (playerState newState)
+    {
+        lastState = pState;
+        pState = newState;
+    }
+
+    void CheckState ()
+    {
+        if (pState == playerState.IDLE || pState == playerState.POUNDING)
+        {
+            ShapeshiftInSquare();
+        }
+        else if (pState == playerState.RUNNING)
+        {
+            ShapeshiftInCircle();
+        }
+        else if (pState == playerState.INAIR)
+        {
+            ShapeshiftInTriangle();
+        }
+    }
+    
     void Jump ()
     {
-        rb.AddForce(Vector3.up * jumpSpeed, ForceMode2D.Impulse);
         grounded = false;
         canPound = true;
-        ShapeshiftInTriangle();
+        ChangeState(playerState.INAIR);
+        rb.AddForce(Vector3.up * jumpSpeed, ForceMode2D.Impulse);
     }
 
     void Pound ()
     {
-        ShapeshiftInSquare();
         lockMovement = true;
-        rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        StopMovement();
+        ChangeState(playerState.POUNDING);
         rb.AddForce(Vector3.down * poundSpeed, ForceMode2D.Impulse);
         StartCoroutine(AllowMovement());
     }
@@ -126,6 +147,17 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    void OnCollisionExit2D (Collision2D coll)
+    {
+        grounded = false;
+        canPound = true;
+        ChangeState(playerState.INAIR);
+    }
+
+    void StopMovement ()
+    {
+        rb.velocity = new Vector3(0, rb.velocity.y, 0);
+    }
 
     IEnumerator AllowMovement ()
     {
