@@ -170,6 +170,7 @@ MonoBehaviour:
   grounded: 0
   canPound: 0
   isPounding: 0
+  jumpSnd: {fileID: 8300000, guid: ce2de0277dacee245ad558ddd34d33c0, type: 3}
   poundSnd: {fileID: 8300000, guid: 942afc246ce2659459115e494fec6341, type: 3}
 --- !u!212 &21284344
 SpriteRenderer:

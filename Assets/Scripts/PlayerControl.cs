@@ -17,6 +17,7 @@ public class PlayerControl : MonoBehaviour
     public bool isPounding = false;
 
     private AudioSource audioSource;
+    public AudioClip jumpSnd;
     public AudioClip poundSnd;
 
     void Start ()
@@ -75,6 +76,7 @@ public class PlayerControl : MonoBehaviour
         grounded = false;
         canPound = true;
         ShapeshiftInTriangle();
+        audioSource.PlayOneShot(jumpSnd, 0.3F);
         rb.AddForce(Vector3.up * jumpSpeed, ForceMode2D.Impulse);
     }
 

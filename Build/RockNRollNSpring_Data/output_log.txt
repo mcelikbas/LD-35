@@ -14,26 +14,20 @@ Platform assembly: D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_
 Loading D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.060 seconds
+- Completed reload, in  0.052 seconds
 Platform assembly: D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: D:\Game Dev\Unity 3D\Ludum Dare\LD-35\Build\RockNRollNSpring_Data\Managed\System.dll (this message is harmless)
 desktop: 1366x768 120Hz; virtual: 1366x768 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.532276 ms
+UnloadTime: 0.638638 ms
 Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.812589 ms
+UnloadTime: 6.001988 ms
 
-Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 296.
-Total: 0.256574 ms (FindLiveObjects: 0.060178 ms CreateObjectMapping: 0.056446 ms MarkObjects: 0.134351 ms  DeleteObjects: 0.004198 ms)
-
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.452504 ms
-
-Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 360.
-Total: 0.239314 ms (FindLiveObjects: 0.048049 ms CreateObjectMapping: 0.055979 ms MarkObjects: 0.131086 ms  DeleteObjects: 0.003265 ms)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 297.
+Total: 0.150212 ms (FindLiveObjects: 0.015860 ms CreateObjectMapping: 0.013994 ms MarkObjects: 0.116158 ms  DeleteObjects: 0.003731 ms)
 
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 215c -> priority: 1 
-  Thread -> id: 1a3c -> priority: 1 
+  Thread -> id: 1f2c -> priority: 1 
+  Thread -> id: 2358 -> priority: 1 
