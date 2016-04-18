@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
+            level = 1;
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
     }
